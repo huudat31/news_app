@@ -29,6 +29,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final format = DateFormat('MMMM dd, yyyy');
   String name = 'nbc-news';
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
+  void getData() async {
+    final response = await newViewModel.fetchNewChannelHeadlinesApi(name);
+    print('dat fetchNewChannelHeadlinesAp $response  ');
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 1;
     final width = MediaQuery.of(context).size.width * 1;
@@ -118,12 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 } else {
                   return ListView.builder(
-                    itemCount: snapshot.data!.articles!.length,
+                    itemCount: snapshot.data?.articles?.length ?? 0,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      DateTime datetime = DateTime.parse(snapshot
-                          .data!.articles![index].publishedAt
-                          .toString());
+                      DateTime datetime = DateTime.parse(
+                          snapshot.data.articles[0].publishedAt.toString());
                       return SizedBox(
                         child: Stack(
                           alignment: Alignment.center,
@@ -136,13 +147,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(15),
                                 child: CachedNetworkImage(
                                   imageUrl: snapshot
-                                      .data!.articles![index].urlToImage
+                                      .data!.articles[index].urlToImage
                                       .toString(),
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
                                       Container(child: spinkit2),
                                   errorWidget: (context, url, error) =>
-                                      Container(
+                                      SizedBox(
                                     child: Icon(Icons.error_outline,
                                         color: Colors.red),
                                   ),
@@ -166,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         padding: EdgeInsets.all(15),
                                         width: width * .75,
                                         child: Text(
-                                          snapshot.data!.articles![index].title
+                                          snapshot.data!.articles[index].title
                                               .toString(),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -176,14 +187,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Spacer(),
-                                      Container(
+                                      SizedBox(
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              snapshot.data!.articles![index]
-                                                  .source!.name
+                                              snapshot.data!.articles[index]
+                                                  .source.name
                                                   .toString(),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
@@ -235,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     DateTime datetime = DateTime.parse(
                         snapshot.data!.articles![index].publishedAt.toString());
-                    return Container(
+                    return SizedBox(
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: Row(

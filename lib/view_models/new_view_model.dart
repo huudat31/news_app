@@ -13,7 +13,7 @@ class NewViewModel {
 
   final _rep2 = CategoriesNew();
   Future<CategoriesNewModel> fetchCategoryNewModelApi(String key) async {
-    final response = await _rep2.fetchCatogoriesNewModel(key);
+    final response = await _rep2.fetchCategoryNewModelApi(key);
     return response;
   }
 }
